@@ -38,10 +38,41 @@ namespace OS_Practice_2
 
         }
 
+        static int OS_Threads()
+        {
+            _OS_incorrect_input_threads:
+            Console.Write(" How many threads do you want to use?\n\n > ");
+            int x;
+            try
+            {
+                x = Int32.Parse(Console.ReadLine());
+                if (x < 1) throw new Exception();
+            } 
+            catch
+            {
+                goto _OS_incorrect_input_threads;
+            }
+            return x;
+        }
+
+        static bool OS_Process()
+        {
+            Console.WriteLine(" Do you want to see the progress of the operation in the console?");
+            Console.WriteLine(" ATTENTION! Bruteforce with console displaying will be slower\n (y/n) > ");
+            return false;
+        }
+
+        static void OS_Bruteforce(string hash, int threads, bool disp)
+        {
+
+        }
+
         static void Main(string[] args)
         {
             string OS_Hash = OS_HashToBruteforce();
             if (OS_Hash == "") return;
+            int OS_ThreadsNumber = OS_Threads();
+            OS_Process();
         }
     }
 }
