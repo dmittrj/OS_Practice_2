@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace OS_Practice_2
 {
+    /// <summary>
+    /// Class for thread. Thread for guess. Guess for fun
+    /// </summary>
     class OS_Thread
     {
         readonly Thread thread;
@@ -17,6 +20,12 @@ namespace OS_Practice_2
         static DateTime startBruteforce = DateTime.Parse("01.01.2001 00:00");
         static DateTime endBruteforce;
         
+        /// <summary>
+        /// This constructor creates new thread and runs it
+        /// </summary>
+        /// <param name="hash">What hash do you want to bruteforce</param>
+        /// <param name="threadNum">Number of current thread</param>
+        /// <param name="threads">Count of threads for one bruteforcing</param>
         public OS_Thread(string hash, int threadNum, int threads)
         {
             thread = new Thread(this.OS_Bruteforce);
@@ -25,6 +34,10 @@ namespace OS_Practice_2
             OS_Cancel = false;
             thread.Start(hash);
         }
+        /// <summary>
+        /// This function HACKS your password!!!
+        /// </summary>
+        /// <param name="num">Hash to bruteforce</param>
         public void OS_Bruteforce(object num)
         {
             if (startBruteforce == DateTime.Parse("01.01.2001 00:00"))
@@ -56,7 +69,6 @@ namespace OS_Practice_2
                     return;
                 }
             }
-            //Console.WriteLine(" Thread " + OS_ThreadNumber.ToString() + "/" + OS_ThreadCount.ToString() + " did't guess yout password");
             if (--OS_ThreadRemaining <= 0)
             {
                 endBruteforce = DateTime.Now;
@@ -72,6 +84,11 @@ namespace OS_Practice_2
 
     class Program
     {
+        /// <summary>
+        /// This function converts string to its SHA-256 hash
+        /// </summary>
+        /// <param name="hashString">Password to hash</param>
+        /// <returns>Hash</returns>
         static string OS_ComputeHash(string hashString)
         {
             var crypt = new System.Security.Cryptography.SHA256Managed();
@@ -84,6 +101,9 @@ namespace OS_Practice_2
             return hash.ToString();
         }
 
+        /// <summary>
+        /// This function makes a list with all possible 5-letters passwords
+        /// </summary>
         static void OS_ComputePasswords()
         {
             Console.WriteLine(" Please wait... Program will start soon");
@@ -95,6 +115,10 @@ namespace OS_Practice_2
                                 OS_Thread.OS_PASSWORDS.Add(a.ToString() + b.ToString() + c.ToString() + d.ToString() + e.ToString());
         }
 
+        /// <summary>
+        /// This function requests hash to bruteforce
+        /// </summary>
+        /// <returns>Hash from user</returns>
         static string OS_HashToBruteforce()
         {
             Console.Clear();
@@ -139,6 +163,10 @@ namespace OS_Practice_2
             return "";
         }
 
+        /// <summary>
+        /// This function requests number of threads that need to use
+        /// </summary>
+        /// <returns>Number of threads</returns>
         static int OS_Threads()
         {
             _OS_incorrect_input_threads:
@@ -156,6 +184,11 @@ namespace OS_Practice_2
             return x;
         }
 
+        /// <summary>
+        /// This function creates threads for guessing your password
+        /// </summary>
+        /// <param name="hash">Hash to guess</param>
+        /// <param name="threads">Number of threads</param>
         static void OS_Bruteforce(string hash, int threads)
         {
             List<OS_Thread> myThread = new List<OS_Thread>();
