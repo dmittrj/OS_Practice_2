@@ -8,10 +8,11 @@ namespace OS_Practice_2
 {
     class OS_Thread
     {
-        Thread thread;
+        readonly Thread thread;
         public static readonly List<string> OS_PASSWORDS = new List<string>();
-        int OS_ThreadNumber;
-        int OS_ThreadCount;
+        readonly int OS_ThreadNumber;
+        readonly int OS_ThreadCount;
+        static int OS_ThreadRemaining;
         static bool OS_Cancel;
         static DateTime startBruteforce = DateTime.Parse("01.01.2001 00:00");
         static DateTime endBruteforce;
@@ -20,7 +21,7 @@ namespace OS_Practice_2
         {
             thread = new Thread(this.OS_Bruteforce);
             OS_ThreadNumber = threadNum;
-            OS_ThreadCount = threads;
+            OS_ThreadCount = OS_ThreadRemaining = threads;
             OS_Cancel = false;
             thread.Start(hash);
         }
@@ -36,8 +37,8 @@ namespace OS_Practice_2
             {
                 if (OS_Cancel) return;
                 string password = OS_PASSWORDS[OS_Counter];
+                //Раскомментируйте строчку ниже, чтобы видеть ход брутфорса
                 //Console.WriteLine("Поток [" + OS_ThreadNumber.ToString() + "]: пароль " + password);
-
                 var hash = new System.Text.StringBuilder();
                 byte[] crypto = crypt.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 foreach (byte theByte in crypto)
@@ -55,15 +56,22 @@ namespace OS_Practice_2
                     return;
                 }
             }
-            Console.WriteLine(" Thread " + OS_ThreadNumber.ToString() + "/" + OS_ThreadCount.ToString() + " did't guess yout password");
-
+            //Console.WriteLine(" Thread " + OS_ThreadNumber.ToString() + "/" + OS_ThreadCount.ToString() + " did't guess yout password");
+            if (--OS_ThreadRemaining <= 0)
+            {
+                endBruteforce = DateTime.Now;
+                Console.WriteLine("\n\n Password not found :( ");
+                Console.WriteLine(" Time left > " + endBruteforce.Subtract(startBruteforce).ToString());
+                OS_Cancel = true;
+                startBruteforce = DateTime.Parse("01.01.2001 00:00");
+                return;
+            }
         }
 
     }
 
     class Program
     {
-        //static readonly List<string> OS_PASSWORDS = new List<string>();
         static string OS_ComputeHash(string hashString)
         {
             var crypt = new System.Security.Cryptography.SHA256Managed();
@@ -87,12 +95,6 @@ namespace OS_Practice_2
                                 OS_Thread.OS_PASSWORDS.Add(a.ToString() + b.ToString() + c.ToString() + d.ToString() + e.ToString());
         }
 
-        static void OS_Statistic()
-        {
-            Console.Clear();
-            Console.WriteLine("\n\n Your current session statistic");
-        }
-
         static string OS_HashToBruteforce()
         {
             Console.Clear();
@@ -104,8 +106,7 @@ namespace OS_Practice_2
             Console.WriteLine(" [4]: Your (from file)");
             Console.WriteLine(" [5]: Your (from keyboard)");
             Console.WriteLine("\n [6]: (dev) Password to hash");
-            Console.WriteLine(" [7]: Statistics");
-            Console.Write(" [8]: Exit\n\n > ");
+            Console.Write(" [7]: Exit\n\n > ");
             string r = Console.ReadLine();
             if (r == "1")
                 return "1115dd800feaacefdf481f1f9070374a2a81e27880f187396db67958b207cbad";
@@ -141,7 +142,7 @@ namespace OS_Practice_2
         static int OS_Threads()
         {
             _OS_incorrect_input_threads:
-            Console.Write(" How many threads do you want to use?\n\n > ");
+            Console.Write("\n How many threads do you want to use?\n > ");
             int x;
             try
             {
@@ -163,7 +164,7 @@ namespace OS_Practice_2
             Console.WriteLine("\n Password bruteforcing is in progress...");
         }
 
-        static void Main(string[] args)
+        static void Main()
         {
             OS_ComputePasswords();
             _OS_start:
