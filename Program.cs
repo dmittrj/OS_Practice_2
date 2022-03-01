@@ -64,6 +64,7 @@ namespace OS_Practice_2
                     endBruteforce = DateTime.Now;
                     Console.WriteLine("\n\n Password found > " + password);
                     Console.WriteLine(" Time required > " + endBruteforce.Subtract(startBruteforce).ToString());
+                    Console.WriteLine(" Press any key to return to the menu");
                     OS_Cancel = true;
                     startBruteforce = DateTime.Parse("01.01.2001 00:00");
                     return;
@@ -73,7 +74,8 @@ namespace OS_Practice_2
             {
                 endBruteforce = DateTime.Now;
                 Console.WriteLine("\n\n Password not found :( ");
-                Console.WriteLine(" Time left > " + endBruteforce.Subtract(startBruteforce).ToString());
+                Console.WriteLine(" Time passed > " + endBruteforce.Subtract(startBruteforce).ToString());
+                Console.WriteLine(" Press any key to return to the menu");
                 OS_Cancel = true;
                 startBruteforce = DateTime.Parse("01.01.2001 00:00");
                 return;
