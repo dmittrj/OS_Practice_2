@@ -45,6 +45,7 @@ namespace OS_Practice_2
             string OS_Current_Hash = num.ToString();
             int OS_Start = 11881376 / OS_ThreadCount * OS_ThreadNumber;
             int OS_Limit = 11881376 / OS_ThreadCount * (OS_ThreadNumber + 1);
+            if (OS_Limit > 11881376) OS_Limit = 11881376;
             var crypt = new System.Security.Cryptography.SHA256Managed();
             for (int OS_Counter = OS_Start; OS_Counter <= OS_Limit; OS_Counter++)
             {
